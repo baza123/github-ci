@@ -42,7 +42,6 @@ jobs:
         with:
           name: ${{ matrix.test-type }}-tests-results-${{ matrix.python-version }}
           path: ${{ matrix.test-type }}_tests_results.xml
-          
   report_workflow:
     if: always()
     runs-on: ubuntu-latest
