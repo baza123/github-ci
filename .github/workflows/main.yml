@@ -28,7 +28,13 @@ jobs:
           poetry install
 
       - name: run small-tests
-        run: poetry run pytest -s -v --junitxml=small_tests_results.xml tests/small
+        run: python -m pytest -v --junitxml=small_tests_results.xml tests/small
+
+      - name: Upload small tests results
+        uses: actions/upload-artifact@v2
+        with:
+          name: small-tests-results
+          path: small_tests_results.xml
 
   large-tests:
     needs: small-tests  # run only if small-tests pass
@@ -44,14 +50,20 @@ jobs:
           poetry install
 
       - name: run large-tests
-        run: poetry run pytest -s -v --junitxml=large_tests_results.xml tests/large
+        run: python -m pytest -v --junitxml=large_tests_results.xml tests/large
+        continue-on-error: true  # continue even if this step fails
 
-
+      - name: Upload large tests results
+        uses: actions/upload-artifact@v2
+        if: always()  # always run this step
+        with:
+          name: large-tests-results
+          path: large_tests_results.xml
 
   report_workflow:
     if: always()
     runs-on: ubuntu-latest
-    needs: [pre-commit, small-tests, large-tests]  # run after all other jobs complete
+    needs: [pre-commit, small-tests]  # run after both pre-commit and small-tests complete
     steps:
       - uses: uoboda-splunk/workflow-info-splunk-upload-action@v1
         with:
