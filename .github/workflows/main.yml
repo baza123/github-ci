@@ -53,3 +53,26 @@ jobs:
           splunk_token: ${{ secrets.SPLUNK_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          
+  semantic-release:
+    if: github.ref == 'refs/heads/main'  # run only for main branch
+    needs: [pre-commit, tests, report_workflow]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Semantic release
+        id: semantic
+        uses: splunk/semantic-release-action@v1.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+        with:
+          git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
+          git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}
+          gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
+          extra_plugins: |
+            @google/semantic-release-replace-plugin
