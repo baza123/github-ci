@@ -28,7 +28,7 @@ jobs:
           poetry install
 
       - name: run small-tests
-        run: poetry run pytest -s -v tests/small
+        run: poetry run pytest -s -v --junitxml=small_tests_results.xml tests/small
 
   large-tests:
     needs: small-tests  # run only if small-tests pass
@@ -44,7 +44,7 @@ jobs:
           poetry install
 
       - name: run large-tests
-        run: poetry run pytest -s -v tests/large
+        run: poetry run pytest -s -v --junitxml=large_tests_results.xml tests/large
 
 
 
