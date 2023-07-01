@@ -43,7 +43,7 @@ jobs:
           poetry install
 
       - name: run large-tests
-        run: poetry run pytest -s -v tests/large 
+        run: poetry run pytest -s -v tests/large
 
 
   report_workflow:
