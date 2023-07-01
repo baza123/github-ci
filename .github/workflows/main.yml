@@ -53,7 +53,6 @@ jobs:
           splunk_token: ${{ secrets.SPLUNK_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          
   semantic-release:
     if: github.ref == 'refs/heads/main'  # run only for main branch
     needs: [pre-commit, tests, report_workflow]
