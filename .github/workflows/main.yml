@@ -47,10 +47,11 @@ jobs:
         run: poetry run pytest -s -v tests/large
 
 
+
   report_workflow:
     if: always()
     runs-on: ubuntu-latest
-    needs: small-tests
+    needs: [pre-commit, small-tests, large-tests]  # run after all other jobs complete
     steps:
       - uses: uoboda-splunk/workflow-info-splunk-upload-action@v1
         with:
